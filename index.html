@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplicativo simples para organizar tarefas pessoais.">
+  <title>Minha Lista de Tarefas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="cabecalho">
+      <p class="etiqueta">ORGANIZAÇÃO PESSOAL</p>
+      <h1>Minha Lista de Tarefas</h1>
+      <p>Adicione, acompanhe e remova suas atividades.</p>
+    </header>
+
+    <section class="painel" aria-labelledby="titulo-formulario">
+      <h2 id="titulo-formulario">Nova tarefa</h2>
+      <form id="form-tarefa">
+        <label for="tarefa">Descrição</label>
+        <div class="linha-formulario">
+          <input
+            id="tarefa"
+            name="tarefa"
+            type="text"
+            maxlength="80"
+            placeholder="Ex.: finalizar relatório"
+            autocomplete="off"
+            required
+          >
+          <button type="submit">Adicionar</button>
+        </div>
+        <p id="mensagem" class="mensagem" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="painel" aria-labelledby="titulo-lista">
+      <div class="topo-lista">
+        <h2 id="titulo-lista">Tarefas</h2>
+        <span id="contador" class="contador">0 tarefas</span>
+      </div>
+      <ul id="lista-tarefas" class="lista-tarefas"></ul>
+      <p id="estado-vazio" class="estado-vazio">Nenhuma tarefa cadastrada.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
