@@ -47,4 +47,4 @@ Não é necessário instalar dependências.
 
 ## Versão
 
-Versão inicial planejada: `v1.0.0`.
+Versão inicial planejada: `v1.0.1`.
