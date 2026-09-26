@@ -6,6 +6,7 @@ const contador = document.querySelector("#contador");
 const mensagem = document.querySelector("#mensagem");
 
 let tarefas = carregarTarefas();
+
 renderizarTarefas();
 
 formulario.addEventListener("submit", (evento) => {
@@ -19,20 +20,41 @@ formulario.addEventListener("submit", (evento) => {
     return;
   }
 
-  tarefas.push({
+  const novaTarefa = {
     id: crypto.randomUUID(),
-    descricao
-  });
+    descricao: descricao,
+    concluida: false
+  };
+
+  tarefas.push(novaTarefa);
 
   salvarTarefas();
   renderizarTarefas();
+
   formulario.reset();
   mensagem.textContent = "";
   campoTarefa.focus();
 });
 
+function alternarConclusao(id) {
+  tarefas = tarefas.map((tarefa) => {
+    if (tarefa.id === id) {
+      return {
+        ...tarefa,
+        concluida: !tarefa.concluida
+      };
+    }
+
+    return tarefa;
+  });
+
+  salvarTarefas();
+  renderizarTarefas();
+}
+
 function removerTarefa(id) {
   tarefas = tarefas.filter((tarefa) => tarefa.id !== id);
+
   salvarTarefas();
   renderizarTarefas();
 }
@@ -44,6 +66,26 @@ function renderizarTarefas() {
     const item = document.createElement("li");
     item.className = "item-tarefa";
 
+    if (tarefa.concluida) {
+      item.classList.add("tarefa-concluida");
+    }
+
+    const conteudo = document.createElement("div");
+    conteudo.className = "conteudo-tarefa";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "checkbox-tarefa";
+    checkbox.checked = tarefa.concluida;
+    checkbox.setAttribute(
+      "aria-label",
+      `Marcar a tarefa ${tarefa.descricao} como concluída`
+    );
+
+    checkbox.addEventListener("change", () => {
+      alternarConclusao(tarefa.id);
+    });
+
     const texto = document.createElement("span");
     texto.className = "texto-tarefa";
     texto.textContent = tarefa.descricao;
@@ -52,15 +94,38 @@ function renderizarTarefas() {
     botao.type = "button";
     botao.className = "botao-remover";
     botao.textContent = "Remover";
-    botao.setAttribute("aria-label", `Remover tarefa: ${tarefa.descricao}`);
-    botao.addEventListener("click", () => removerTarefa(tarefa.id));
+    botao.setAttribute(
+      "aria-label",
+      `Remover tarefa: ${tarefa.descricao}`
+    );
 
-    item.append(texto, botao);
+    botao.addEventListener("click", () => {
+      removerTarefa(tarefa.id);
+    });
+
+    conteudo.append(checkbox, texto);
+    item.append(conteudo, botao);
     listaTarefas.appendChild(item);
   });
 
-  estadoVazio.hidden = tarefas.length > 0;
-  contador.textContent = `${tarefas.length} ${tarefas.length === 1 ? "tarefa" : "tarefas"}`;
+  atualizarInformacoes();
+}
+
+function atualizarInformacoes() {
+  const quantidadeTotal = tarefas.length;
+  const quantidadeConcluida = tarefas.filter(
+    (tarefa) => tarefa.concluida
+  ).length;
+
+  estadoVazio.hidden = quantidadeTotal > 0;
+
+  if (quantidadeTotal === 0) {
+    contador.textContent = "0 tarefas";
+    return;
+  }
+
+  contador.textContent =
+    `${quantidadeConcluida} de ${quantidadeTotal} concluídas`;
 }
 
 function salvarTarefas() {
@@ -69,7 +134,13 @@ function salvarTarefas() {
 
 function carregarTarefas() {
   try {
-    return JSON.parse(localStorage.getItem("tarefas")) || [];
+    const tarefasSalvas =
+      JSON.parse(localStorage.getItem("tarefas")) || [];
+
+    return tarefasSalvas.map((tarefa) => ({
+      ...tarefa,
+      concluida: tarefa.concluida || false
+    }));
   } catch {
     return [];
   }

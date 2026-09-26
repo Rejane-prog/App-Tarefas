@@ -187,3 +187,34 @@ button:hover {
     flex-direction: column;
   }
 }
+
+.conteudo-tarefa {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+  min-width: 0;
+}
+
+.checkbox-tarefa {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--azul);
+  cursor: pointer;
+}
+
+.tarefa-concluida {
+  border-color: #b9dfc5;
+  background: #f1fbf4;
+}
+
+.tarefa-concluida .texto-tarefa {
+  color: var(--texto-suave);
+  text-decoration: line-through;
+}
+
+.tarefa-concluida .checkbox-tarefa {
+  accent-color: #238636;
+}
